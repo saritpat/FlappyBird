@@ -40,5 +40,10 @@ public class FlappyBird : MonoBehaviour
         {
             rb.gravityScale = _fallingGravityScale;
         }
+
+        if (rb.velocity.y <= -10)
+        {
+            transform.eulerAngles = Vector3.back * 60;
+        }
     }
 }
