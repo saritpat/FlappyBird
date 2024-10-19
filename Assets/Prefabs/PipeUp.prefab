@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1438287683339975687}
   - component: {fileID: 1990012112244311229}
-  - component: {fileID: -4394340314973026579}
+  - component: {fileID: 343025480910984683}
   - component: {fileID: 7979536066213182086}
   - component: {fileID: -1263501552389716902}
   m_Layer: 0
@@ -80,14 +80,14 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.52, y: 3.2}
+  m_DrawMode: 1
+  m_Size: {x: 0.75, y: 3.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!50 &-4394340314973026579
+--- !u!50 &343025480910984683
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -146,18 +146,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.0045287013, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.52, y: 3.2}
-    newSize: {x: 0.52, y: 3.2}
+    newSize: {x: 0.75, y: 3.2}
     adaptiveTilingThreshold: 0.5
-    drawMode: 0
+    drawMode: 1
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.52, y: 3.2}
+  m_Size: {x: 0.7554933, y: 3.2}
   m_EdgeRadius: 0
 --- !u!114 &-1263501552389716902
 MonoBehaviour:
