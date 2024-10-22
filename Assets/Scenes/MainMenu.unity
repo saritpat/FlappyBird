@@ -620,8 +620,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2139435251501474235, guid: b3736bcc322d5e648a316496f71abb6c, type: 3}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 596712779}
+        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
         m_MethodName: PlayGame
         m_Mode: 1
         m_Arguments:
@@ -893,7 +893,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908701972}
   m_CullTransparentMesh: 1
---- !u!1001 &8651365843377200060
+--- !u!1001 &1946329172
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -956,8 +956,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 519420032}
   - {fileID: 619394802}
-  - {fileID: 1070084209}
-  - {fileID: 8651365843377200060}
+  - {fileID: 1946329172}
   - {fileID: 596712780}
+  - {fileID: 1070084209}
   - {fileID: 1378339288}
   - {fileID: 350279677}

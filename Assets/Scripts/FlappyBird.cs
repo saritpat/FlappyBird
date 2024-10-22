@@ -8,8 +8,8 @@ public class FlappyBird : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rb;
 
-    public GameController gameManager;
-    
+    public GameController gameController;
+
     private float jumpHeight;
     private float gravityScale;
     private float fallingGravityScale;
@@ -26,11 +26,12 @@ public class FlappyBird : MonoBehaviour
 
         jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics2D.gravity.y * _rb.gravityScale));
     }
+
     private void Update()
     {
         // Jumping
-        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && gameManager.gameEnd == false)
-        {  
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && gameController.gameEnd == false)
+        {
             _rb.bodyType = RigidbodyType2D.Dynamic;
 
             _rb.velocity = Vector2.zero;
@@ -50,12 +51,14 @@ public class FlappyBird : MonoBehaviour
         }
 
         RotateFlappyBird();
-        
+
         // Check collision
-        if (isCollision) 
+        if (isCollision)
         {
-            gameManager.EndGame();
+            gameController.EndGame();
         }
+
+        StopBird();
     }
 
     private void RotateFlappyBird()
@@ -67,6 +70,14 @@ public class FlappyBird : MonoBehaviour
         else if (_rb.velocity.y < 0)
         {
             transform.eulerAngles = _rb.velocity.y * -4 * Vector3.back;
+        }
+    }
+
+    private void StopBird()
+    {
+        if (gameController.gameEnd)
+        {
+            _rb.bodyType = RigidbodyType2D.Static;
         }
     }
 

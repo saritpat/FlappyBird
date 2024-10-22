@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class PipeUp : MonoBehaviour
 {
-    private void DestroyPipe()
+    private void OnBecameInvisible()
     {
-        
+        Destroy(gameObject);
     }
 }

@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour
     [SerializeField] private PipeSpawner _pipeSpawner;
 
     [SerializeField] private GameObject _restartSceen;
-
     [SerializeField] public Button _restartButton;
     [SerializeField] public Button _returnToMenuButton;
 
@@ -27,6 +26,7 @@ public class GameController : MonoBehaviour
     private float y;
     private Vector2 spawnPosition;
     private Vector2 gap;
+    private List<Rigidbody2D> activePipes = new List<Rigidbody2D>();
 
     private void Awake()
     {
@@ -80,6 +80,7 @@ public class GameController : MonoBehaviour
             _restartSceen.SetActive(true);
 
             // stop pipe
+            StopAllPipes();
         }
     }
 
@@ -112,21 +113,25 @@ public class GameController : MonoBehaviour
             RandomPosition();
             Rigidbody2D pipeUp = Instantiate(_pipeUp, spawnPosition, Quaternion.identity);
             pipeUp.velocity = new Vector2(pipeSpeed, 0);
+            activePipes.Add(pipeUp);
 
             Rigidbody2D pipeDown = Instantiate(_pipeDown, spawnPosition - gap, Quaternion.identity);
             pipeDown.velocity = new Vector2(pipeSpeed, 0);
+            activePipes.Add(pipeDown);
+
             yield return new WaitForSeconds(1f);
         }
     }
 
-    private void DestroyPipe()
+    private void StopAllPipes()
     {
-        // if pipe.position.x < camera.position.x -> Destroy pipe
-    }
-
-    public void RemovePipe(PipeUp pipe)
-    {
-        //pipe.Remove(pipe);
+        foreach (Rigidbody2D pipe in activePipes)
+        {
+            if (pipe != null)
+            {
+                pipe.velocity = Vector2.zero;
+            }
+        }
     }
 
     #endregion

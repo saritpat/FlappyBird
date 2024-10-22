@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class PipeDown : MonoBehaviour
 {
-    
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
 }
