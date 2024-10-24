@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class Background : MonoBehaviour
 {
-    public float scrollSpeed = 2f;  // Speed at which the ground scrolls
-    public float tileSizeX;         // Width of one tile of the ground
+    [SerializeField] private GameController gameController;
+
+    private readonly float scrollSpeed = 4f;
+    private float tileSize;
 
     private Vector3 startPosition;
 
     void Start()
     {
         startPosition = transform.position;
-        // Calculate tile size based on the renderer bounds (useful for adjustments)
-        tileSizeX = GetComponent<SpriteRenderer>().bounds.size.x;
+        // Calculate tile size based on the renderer bounds
+        tileSize = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
     void Update()
     {
-        // Move the ground to the left by scrollSpeed over time
-        float newPosition = Mathf.Repeat(Time.time * scrollSpeed, tileSizeX);
+        if (!gameController.gameEnd)
+        {
+            MoveTiles();
+        }
+    }
+
+    private void MoveTiles()
+    {
+        float newPosition = Mathf.Repeat(Time.time * scrollSpeed, tileSize);
         transform.position = startPosition + Vector3.left * newPosition;
     }
 }

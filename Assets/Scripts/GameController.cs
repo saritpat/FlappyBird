@@ -10,16 +10,16 @@ public class GameController : MonoBehaviour
     [SerializeField] private Rigidbody2D _pipeDown;
     [SerializeField] private PipeSpawner _pipeSpawner;
 
-    [SerializeField] private GameObject _restartSceen;
+    [SerializeField] private GameObject _restartScreen;
     [SerializeField] public Button _restartButton;
     [SerializeField] public Button _returnToMenuButton;
 
     public FlappyBird flappyBird;
 
-    private bool gameStart;
+    public bool gameStart;
     public bool gameEnd;
 
-    private int score;
+    private int score = 0;
 
     private float pipeSpeed;
     private float x;
@@ -59,17 +59,17 @@ public class GameController : MonoBehaviour
         }
 
         gameStart = true;
-        _restartSceen.SetActive(false);
+        _restartScreen.SetActive(false);
     }
 
     public void ScoreCount()
     {
-        //
-        //if (flappyBird.transform.position.x == _pipeUp.transform.position.x)
-        //{
-        //    score += 1;
-        //    Debug.Log(score);
-        //}
+
+        if (flappyBird.transform.position.x == _pipeUp.transform.position.x)
+        {
+            score += 1;
+            Debug.Log(score);
+        }
     }
 
     public void EndGame()
@@ -77,7 +77,7 @@ public class GameController : MonoBehaviour
         if (gameEnd == false)
         {
             gameEnd = true;
-            _restartSceen.SetActive(true);
+            _restartScreen.SetActive(true);
 
             // stop pipe
             StopAllPipes();

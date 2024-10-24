@@ -8,7 +8,7 @@ public class FlappyBird : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rb;
 
-    public GameController gameController;
+    [SerializeField] private GameController gameController;
 
     private float jumpHeight;
     private float gravityScale;
@@ -56,9 +56,8 @@ public class FlappyBird : MonoBehaviour
         if (isCollision)
         {
             gameController.EndGame();
+            StopBird();
         }
-
-        StopBird();
     }
 
     private void RotateFlappyBird()
@@ -75,10 +74,8 @@ public class FlappyBird : MonoBehaviour
 
     private void StopBird()
     {
-        if (gameController.gameEnd)
-        {
-            _rb.bodyType = RigidbodyType2D.Static;
-        }
+        _rb.bodyType = RigidbodyType2D.Static;
+        Destroy(gameObject);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
