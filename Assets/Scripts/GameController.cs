@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -11,15 +12,20 @@ public class GameController : MonoBehaviour
     [SerializeField] private PipeSpawner _pipeSpawner;
 
     [SerializeField] private GameObject _restartScreen;
-    [SerializeField] public Button _restartButton;
-    [SerializeField] public Button _returnToMenuButton;
+    [SerializeField] private Button _restartButton;
+    [SerializeField] private Button _returnToMenuButton;
 
-    public FlappyBird flappyBird;
+    [SerializeField] private FlappyBird flappyBird;
 
     public bool gameStart;
     public bool gameEnd;
 
-    private int score = 0;
+    private float score = 0f;
+    public GameObject digitPrefab;
+    public Sprite[] numberSprites;
+    private List<GameObject> digits = new List<GameObject>();
+
+    private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
 
     private float pipeSpeed;
     private float x;
@@ -46,7 +52,7 @@ public class GameController : MonoBehaviour
 
         if (gameStart && !gameEnd)
         {
-            ScoreCount();
+            CheckPipePass();
         }
     }
 
@@ -62,15 +68,7 @@ public class GameController : MonoBehaviour
         _restartScreen.SetActive(false);
     }
 
-    public void ScoreCount()
-    {
 
-        if (flappyBird.transform.position.x == _pipeUp.transform.position.x)
-        {
-            score += 1;
-            Debug.Log(score);
-        }
-    }
 
     public void EndGame()
     {
@@ -96,8 +94,52 @@ public class GameController : MonoBehaviour
 
     #endregion
 
-    #region Pipe
+    #region Score
+    private void CheckPipePass()
+    {
+        foreach (Rigidbody2D pipe in activePipes)
+        {
+            // Check if FlappyBird has passed the pipe and the pipe is not already scored
+            if (pipe != null && flappyBird.transform.position.x > pipe.transform.position.x && !passedPipes.Contains(pipe))
+            {
+                score+=0.5f;
+                Debug.Log("Score: " + score);
+                passedPipes.Add(pipe); // Mark this pipe as passed
+            }
+        }
+    }
 
+    public void DisplayNumber(int number)
+    {
+        ClearDigits();
+
+        string numberStr = number.ToString();
+        float digitWidth = 1.0f; // Adjust based on sprite size
+
+        for (int i = 0; i < numberStr.Length; i++)
+        {
+            int digit = numberStr[i] - '0';
+            GameObject newDigit = Instantiate(digitPrefab, transform);
+            newDigit.GetComponent<SpriteRenderer>().sprite = numberSprites[digit];
+
+            // Set the position of each digit based on its order
+            newDigit.transform.localPosition = new Vector3(i * digitWidth, 0, 0);
+            digits.Add(newDigit);
+        }
+    }
+
+    private void ClearDigits()
+    {
+        foreach (GameObject digit in digits)
+        {
+            Destroy(digit);
+        }
+        digits.Clear();
+    }
+
+    #endregion
+
+    #region Pipe
     private void RandomPosition()
     {
         x = _pipeSpawner.transform.position.x;
