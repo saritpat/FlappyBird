@@ -21,9 +21,7 @@ public class GameController : MonoBehaviour
     public bool gameEnd;
 
     private float score = 0f;
-    public GameObject digitPrefab;
-    public Sprite[] numberSprites;
-    private List<GameObject> digits = new List<GameObject>();
+    public NumberRenderer numberRenderer;
 
     private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
 
@@ -41,6 +39,9 @@ public class GameController : MonoBehaviour
 
         _restartButton.onClick.AddListener(RestartGame);
         _returnToMenuButton.onClick.AddListener(GoToMenu);
+
+        // render start score
+        numberRenderer.DisplayNumber(0);
     }
 
     private void Update()
@@ -104,37 +105,13 @@ public class GameController : MonoBehaviour
             {
                 score+=0.5f;
                 Debug.Log("Score: " + score);
-                passedPipes.Add(pipe); // Mark this pipe as passed
+                // Mark this pipe as passed
+                passedPipes.Add(pipe);
+
+                // render score
+                numberRenderer.DisplayNumber((int)score);
             }
         }
-    }
-
-    public void DisplayNumber(int number)
-    {
-        ClearDigits();
-
-        string numberStr = number.ToString();
-        float digitWidth = 1.0f; // Adjust based on sprite size
-
-        for (int i = 0; i < numberStr.Length; i++)
-        {
-            int digit = numberStr[i] - '0';
-            GameObject newDigit = Instantiate(digitPrefab, transform);
-            newDigit.GetComponent<SpriteRenderer>().sprite = numberSprites[digit];
-
-            // Set the position of each digit based on its order
-            newDigit.transform.localPosition = new Vector3(i * digitWidth, 0, 0);
-            digits.Add(newDigit);
-        }
-    }
-
-    private void ClearDigits()
-    {
-        foreach (GameObject digit in digits)
-        {
-            Destroy(digit);
-        }
-        digits.Clear();
     }
 
     #endregion
