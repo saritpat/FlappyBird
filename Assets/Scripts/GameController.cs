@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -20,17 +18,20 @@ public class GameController : MonoBehaviour
     public bool gameStart;
     public bool gameEnd;
 
-    private float score = 0f;
-    public NumberRenderer numberRenderer;
-
-    private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
+    private float currentScore;
+    public NumberRenderer currentScoreRenderer;
+    public NumberRenderer highScoreRenderer;
 
     private float pipeSpeed;
     private float x;
     private float y;
     private Vector2 spawnPosition;
     private Vector2 gap;
-    private List<Rigidbody2D> activePipes = new List<Rigidbody2D>();
+    private HashSet<Rigidbody2D> activePipes = new HashSet<Rigidbody2D>();
+    private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
+
+    private Color lerpedColor = Color.clear;
+    private Renderer colorRenderer;
 
     private void Awake()
     {
@@ -41,7 +42,18 @@ public class GameController : MonoBehaviour
         _returnToMenuButton.onClick.AddListener(GoToMenu);
 
         // render start score
-        numberRenderer.DisplayNumber(0);
+        currentScoreRenderer.DisplayNumber(0);
+
+        if (PlayerPrefs.HasKey("SavedHighScore"))
+        {
+            highScoreRenderer.DisplayNumber((int)PlayerPrefs.GetFloat("SavedHighScore"));
+        }
+        else
+        {
+            highScoreRenderer.DisplayNumber(0);
+        }
+
+        colorRenderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -54,6 +66,11 @@ public class GameController : MonoBehaviour
         if (gameStart && !gameEnd)
         {
             CheckPipePass();
+        }
+
+        if (currentScore % 2 == 0)
+        {
+            ChangeBackground();
         }
     }
 
@@ -80,7 +97,10 @@ public class GameController : MonoBehaviour
 
             // stop pipe
             StopAllPipes();
+
+            HighScoreUpdate();
         }
+
     }
 
     public void GoToMenu()
@@ -103,15 +123,41 @@ public class GameController : MonoBehaviour
             // Check if FlappyBird has passed the pipe and the pipe is not already scored
             if (pipe != null && flappyBird.transform.position.x > pipe.transform.position.x && !passedPipes.Contains(pipe))
             {
-                score+=0.5f;
-                Debug.Log("Score: " + score);
+                currentScore+=0.5f;
                 // Mark this pipe as passed
                 passedPipes.Add(pipe);
 
                 // render score
-                numberRenderer.DisplayNumber((int)score);
+                currentScoreRenderer.DisplayNumber((int)currentScore);
             }
         }
+    }
+
+    private void HighScoreUpdate()
+    {
+        // Check exist highscore
+        if (PlayerPrefs.HasKey("SavedHighScore"))
+        {
+            if (currentScore > PlayerPrefs.GetFloat("SavedHighScore"))
+            {
+                PlayerPrefs.SetFloat("SavedHighScore", currentScore);
+
+            }
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("SavedHighScore", currentScore);
+        }
+    }
+
+    #endregion
+
+    #region
+
+    private void ChangeBackground()
+    {
+        lerpedColor = Color.Lerp(Color.clear, Color.black, Mathf.PingPong(Time.time, 1));
+        colorRenderer.material.color = lerpedColor;
     }
 
     #endregion

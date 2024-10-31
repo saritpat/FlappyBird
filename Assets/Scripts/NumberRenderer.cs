@@ -18,7 +18,7 @@ public class NumberRenderer : MonoBehaviour
 
         string numberStr = number.ToString();
         // Adjust based on sprite size
-        float digitWidth = 0.1f; 
+        float digitWidth = 0.25f;
 
         for (int i = 0; i < numberStr.Length; i++)
         {

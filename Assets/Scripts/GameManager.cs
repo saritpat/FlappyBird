@@ -25,6 +25,11 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Gameplay");
     }
 
+    public void ScoreBoard()
+    {
+        SceneManager.LoadScene("ScoreBoard");
+    }
+
     public void GoToMenu()
     {
         SceneManager.LoadScene("MainMenu");

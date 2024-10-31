@@ -16,9 +16,12 @@ public class ScoreBoard : MonoBehaviour
     private string scoreList;
     private string scoreNameList;
 
+    private string defaultName = "FlappyBird";
+    private int defaultScore = 0;
+
     public void SetHighScore(int score, string name)
     {
-        for (int i = 0;i < scores.Count; i++)
+        for (int i = 0;i < scores.Count;i++)
         {
             if(highScoreToSet <= 1)
             {
@@ -35,5 +38,51 @@ public class ScoreBoard : MonoBehaviour
                 PlayerPrefs.SetString(scoreNameList, scoreNames[i]);
             }
         }
+    }
+
+    private void LoadScores()
+    {
+        scores.Clear();
+        scoreNames.Clear();
+
+        for(int i = 0;i < 10;i++)
+        {
+            scoreList = "Score" + i;
+            scoreNameList = "ScoreName" + i;
+            scores.Add(PlayerPrefs.GetInt(scoreList));
+            scoreNames.Add(PlayerPrefs.GetString(scoreNameList));
+        }
+    }
+
+    private void CheckNoscores()
+    {
+        if(scores.Count == 0)
+        {
+            for(int i = 0;i < 10;i++)
+            {
+                //defaultScore -= i;
+                scoreList = "Score" + i;
+                scoreNameList = "scoreName" + i;
+                PlayerPrefs.SetInt(scoreList, defaultScore);
+                PlayerPrefs.SetString(scoreNameList, defaultName);
+            }
+        }
+    }
+
+    public int CheckScore(int score)
+    {
+        LoadScores();
+        highScoreToSet = 99;
+
+        for(int i = 0;i < scores.Count; i++)
+        {
+            if (score > scores[i])
+            {
+                highScoreToSet = i;
+                i = 10;
+            }
+        }
+
+        return highScoreToSet;
     }
 }
