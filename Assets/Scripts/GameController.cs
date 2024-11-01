@@ -145,8 +145,8 @@ public class GameController : MonoBehaviour
     private void RandomPosition()
     {
         x = _pipeSpawner.transform.position.x;
-        //y = Random.Range(2.5f, 7.5f);
-        y = Random.Range(100f, 101f);
+        y = Random.Range(2.5f, 7.5f);
+        //y = Random.Range(100f, 101f);
 
         spawnPosition = new Vector2(x, y);
     }
