@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     public bool gameStart;
     public bool gameEnd;
 
-    private float currentScore;
+    public float currentScore;
     public NumberRenderer currentScoreRenderer;
     public NumberRenderer highScoreRenderer;
 
@@ -30,13 +30,10 @@ public class GameController : MonoBehaviour
     private HashSet<Rigidbody2D> activePipes = new HashSet<Rigidbody2D>();
     private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
 
-    private Color lerpedColor = Color.clear;
-    private Renderer colorRenderer;
-
     private void Awake()
     {
         pipeSpeed = -5f;
-        gap = new Vector2(0, 10);
+        gap = new Vector2(0, 9.5f);
 
         _restartButton.onClick.AddListener(RestartGame);
         _returnToMenuButton.onClick.AddListener(GoToMenu);
@@ -52,8 +49,6 @@ public class GameController : MonoBehaviour
         {
             highScoreRenderer.DisplayNumber(0);
         }
-
-        colorRenderer = GetComponent<Renderer>();
     }
 
     private void Update()
@@ -66,11 +61,6 @@ public class GameController : MonoBehaviour
         if (gameStart && !gameEnd)
         {
             CheckPipePass();
-        }
-
-        if (currentScore % 2 == 0)
-        {
-            ChangeBackground();
         }
     }
 
@@ -141,7 +131,6 @@ public class GameController : MonoBehaviour
             if (currentScore > PlayerPrefs.GetFloat("SavedHighScore"))
             {
                 PlayerPrefs.SetFloat("SavedHighScore", currentScore);
-
             }
         }
         else
@@ -152,21 +141,12 @@ public class GameController : MonoBehaviour
 
     #endregion
 
-    #region
-
-    private void ChangeBackground()
-    {
-        lerpedColor = Color.Lerp(Color.clear, Color.black, Mathf.PingPong(Time.time, 1));
-        colorRenderer.material.color = lerpedColor;
-    }
-
-    #endregion
-
     #region Pipe
     private void RandomPosition()
     {
         x = _pipeSpawner.transform.position.x;
-        y = Random.Range(3f, 7f);
+        //y = Random.Range(2.5f, 7.5f);
+        y = Random.Range(100f, 101f);
 
         spawnPosition = new Vector2(x, y);
     }
