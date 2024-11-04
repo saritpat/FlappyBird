@@ -4,15 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
-{   
+{
+    [Header("Game object")]
     [SerializeField] private Rigidbody2D _pipeUp;
     [SerializeField] private Rigidbody2D _pipeDown;
-    [SerializeField] private PipeSpawner _pipeSpawner;
+    [SerializeField] private PipeSpawner pipeSpawner;
 
-    [SerializeField] private GameObject _restartScreen;
-    [SerializeField] private Button _restartButton;
-    [SerializeField] private Button _returnToMenuButton;
+    [Header("UI")]
+    [SerializeField] private GameObject restartScreen;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private Button returnToMenuButton;
 
+    [Header("Bird")]
     [SerializeField] private FlappyBird flappyBird;
 
     public bool gameStart;
@@ -30,13 +33,15 @@ public class GameController : MonoBehaviour
     private HashSet<Rigidbody2D> activePipes = new HashSet<Rigidbody2D>();
     private HashSet<Rigidbody2D> passedPipes = new HashSet<Rigidbody2D>();
 
+    private AudioSource[] audioGame;
+
     private void Awake()
     {
         pipeSpeed = -5f;
-        gap = new Vector2(0, 9.5f);
+        gap = new Vector2(0, 10f);
 
-        _restartButton.onClick.AddListener(RestartGame);
-        _returnToMenuButton.onClick.AddListener(GoToMenu);
+        restartButton.onClick.AddListener(RestartGame);
+        returnToMenuButton.onClick.AddListener(GoToMenu);
 
         // render start score
         currentScoreRenderer.DisplayNumber(0);
@@ -49,6 +54,8 @@ public class GameController : MonoBehaviour
         {
             highScoreRenderer.DisplayNumber(0);
         }
+
+        audioGame = GetComponents<AudioSource>();
     }
 
     private void Update()
@@ -73,7 +80,7 @@ public class GameController : MonoBehaviour
         }
 
         gameStart = true;
-        _restartScreen.SetActive(false);
+        restartScreen.SetActive(false);
     }
 
 
@@ -83,12 +90,15 @@ public class GameController : MonoBehaviour
         if (gameEnd == false)
         {
             gameEnd = true;
-            _restartScreen.SetActive(true);
+            restartScreen.SetActive(true);
 
             // stop pipe
             StopAllPipes();
 
             HighScoreUpdate();
+
+            // play sound "die"
+            audioGame[1].Play();
         }
 
     }
@@ -119,6 +129,9 @@ public class GameController : MonoBehaviour
 
                 // render score
                 currentScoreRenderer.DisplayNumber((int)currentScore);
+
+                // play sound "point"
+                audioGame[0].Play();
             }
         }
     }
@@ -144,7 +157,7 @@ public class GameController : MonoBehaviour
     #region Pipe
     private void RandomPosition()
     {
-        x = _pipeSpawner.transform.position.x;
+        x = pipeSpawner.transform.position.x;
         y = Random.Range(2.5f, 7.5f);
         //y = Random.Range(100f, 101f);
 

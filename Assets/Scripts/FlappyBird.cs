@@ -6,9 +6,10 @@ using UnityEngine;
 
 public class FlappyBird : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D _rb;
-
     [SerializeField] private GameController gameController;
+
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Animator fly;
 
     private float jumpHeight;
     private float gravityScale;
@@ -16,15 +17,19 @@ public class FlappyBird : MonoBehaviour
 
     private float jumpForce;
     private bool isCollision;
+    
+    private AudioSource[] audioBird;
 
     private void Awake()
     {
         jumpHeight = 10f;
         gravityScale = 6f;
         fallingGravityScale = 3f;
-        _rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.bodyType = RigidbodyType2D.Kinematic;
 
-        jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics2D.gravity.y * _rb.gravityScale));
+        jumpForce = Mathf.Sqrt(jumpHeight * -2 * (Physics2D.gravity.y * rb.gravityScale));
+
+        audioBird = GetComponents<AudioSource>();
     }
 
     private void Update()
@@ -32,22 +37,25 @@ public class FlappyBird : MonoBehaviour
         // Jumping
         if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)) && gameController.gameEnd == false)
         {
-            _rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.bodyType = RigidbodyType2D.Dynamic;
 
-            _rb.velocity = Vector2.zero;
-            _rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            rb.velocity = Vector2.zero;
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
 
             transform.eulerAngles = Vector3.forward * 30;
+
+            // play sound "swing"
+            audioBird[0].Play();
         }
 
         // Set gravity scale and Rotate
-        if (_rb.velocity.y >= 0)
+        if (rb.velocity.y >= 0)
         {
-            _rb.gravityScale = gravityScale;
+            rb.gravityScale = gravityScale;
         }
-        else if (_rb.velocity.y < 0)
+        else if (rb.velocity.y < 0)
         {
-            _rb.gravityScale = fallingGravityScale;
+            rb.gravityScale = fallingGravityScale;
         }
 
         RotateFlappyBird();
@@ -62,24 +70,27 @@ public class FlappyBird : MonoBehaviour
 
     private void RotateFlappyBird()
     {
-        if (_rb.velocity.y >= 0)
+        if (rb.velocity.y >= 0)
         {
-            transform.eulerAngles = _rb.velocity.y * 2 * Vector3.forward;
+            transform.eulerAngles = rb.velocity.y * 2 * Vector3.forward;
         }
-        else if (_rb.velocity.y < 0)
+        else if (rb.velocity.y < 0)
         {
-            transform.eulerAngles = _rb.velocity.y * -4 * Vector3.back;
+            transform.eulerAngles = rb.velocity.y * -4 * Vector3.back;
         }
     }
 
     private void StopBird()
     {
-        _rb.bodyType = RigidbodyType2D.Static;
-        Destroy(gameObject);
+        rb.bodyType = RigidbodyType2D.Static;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        // play sound "hit"
+        audioBird[1].Play();
+        fly.enabled = false;
+
         isCollision = true;
     }
 }
